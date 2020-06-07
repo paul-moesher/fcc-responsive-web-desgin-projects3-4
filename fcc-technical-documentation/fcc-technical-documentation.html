@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FCC Technical Documentation</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <h1>Paul Moesher FCC Technical Documentation</h1>
+    <p>This is actaul documentation that I typed up for work not too long ago.
+        Out of respect to the privacy of the districts network. I changed the Vlans
+        in this project to something random (not what they actaully represent).
+    </p>
+
+    <h2>Cheat Sheet/Reference Guide on How to Correctly Configure a Switchport for an IP Phone at New London</h2>
+    <h3>Compiled by Paul Moesher</h3>
+
+    <ol>
+        <li>
+            <strong>Determine what switch and what port on that switch the phone is utilizing. </strong>All drops are
+            labeled with their
+            tech closest room number so oftentimes it will be obvious what switch it is utilizing. Once you ssh into the
+            switch you can run <mark>sh mac ad ad 1111.2222.3333</mark> to get the port the phone is utilizing. View the
+            ip phone
+            sheet I created to get a phones mac address.
+        </li>
+        <br />
+        <li>
+            <strong>View the current configuration of that port.</strong>To do this run <mark>sh run int gix/x/x.</mark>
+            The correct configuration should be the following:
+            <ul>
+                <li>
+                    Access vlan set to wired/data vlan
+                </li>
+                <ul>
+                    <li>
+                        The access vlan should be set to either 13 or 21 assuming the phone is using a switch in the
+                        main
+                        building or the switch in the NLDA. New London main building currently has 2 wired Vlans… Vlan
+                        13
+                        which gives out an address in the .3-.5 range and Vlan 21 which gives out a .2 address... either
+                        works. I have been using Vlan 2 of late. If the phone is in the bus garage or the BOE the access
+                        Vlan should be 110 as that is the wired Vlan they are on out there.
+                    </li>
+                </ul>
+                <li>Switchport mode access</li>
+                <ul>
+                    <li>
+                        Port should be set to switchport mode access.
+                    </li>
+                </ul>
+                <li>
+                    Switchport mode voice vlan 100
+                </li>
+                <ul>
+                    <li>
+                        Port must be set to voice Vlan 101 as this is the phone Vlan.
+                    </li>
+                </ul>
+                <li>
+                    Spanning tree portfast
+                </li>
+                <ul>
+                    <li>
+                        This is automatically enabled by the switch once a voice Vlan is configured.
+                    </li>
+                </ul>
+            </ul>
+        </li>
+        <br />
+        <img
+            src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUSEhARFhUXFRcVFhgYGBcaGBgZFhkYGBcWGBYYICggGB0mGxcVITIhJSktLjAuFx8zODMsNygtLisBCgoKDg0OFw8QGC0dHh0tLS8tLjItLS0tLS0tLS0tKy0tKy0tLS0tLS0tLS0tLS4tLS0tLS0tKy0tLSstLS01Lf/AABEIAKgBLAMBIgACEQEDEQH/xAAcAAEAAgMBAQEAAAAAAAAAAAAAAwQBAggFBgf/xABJEAABAwIDAgkHCgIJBQEAAAABAAIRAyEEEjFBUQUTIjJSYXGRoRQVM0KBkrEXIzRTVHJzk7LiB2IGJEPB0dLh4/BEgqKj8WT/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIEBf/EAB8RAQACAgICAwAAAAAAAAAAAAABEQIDBBIhsTFBof/aAAwDAQACEQMRAD8A/TsNiAHekxPKDCB6jcoggOiBO47rKU8KgguDsS0aRxd9NQ0tk+xeY44hzOdUbmazTMMsDZbbtW1ZuIJac9QZXh8DMM2X1SMt2naEHou4TY0C+JvcQ0k74jKSLbDuWPOIABz4qCehf2tyZgLawo/OFX6mp4/5E841fqKmg2nZt5qCxh+FmAF39YIsIcx0jrDSM21TefWZc2SrExzHTafVjNFtYVV/CtYiBhyDvh3+CqOr4glpl7YM80xexBtBA/vQerU4dYIJp1bibMce8ASD1FH8OsDc2SrExZjp92JjrhUA2u3IzNVME8rITMH1nbu3XYpThK2aeOIh+aOVBjZBPNshEr7eFWkTld8PA6LPnNvRd4Kl5NWho47mmdOdrZ06i/gEoYas0vPHTmMwQSB1NBNh2ILvnRvRd4J50b0XeCgit02e6kVumz3UE/nNvRd4LPnNvRd4KvFbps91IrdNnuoLHnNvRd4J5zb0XeCrxW6bPdSK3TZ7qCx5zb0XeCecm9E+CrxW6bPdSK3TZ7qCx5yb0T4J5yb0T4KvFbps91IrdNnuoLHnJvRPgnnJvRPgq8Vumz3Uit02e6gsecm9E+Cecm9E+CrxW6bPdSK3TZ7qCz5yb0T4J5yb0T4KtFbps91IrdNnuoLPnJvRPgnnFvRPgq0Vumz3Uit9Yz3UFnzi3onwTzi3onwVaK31jPdSK31jPdQWfOLeifBPOLeifBVorfWM91IrfWM91BZ84t6J8E84t6J8FWit9Yz3Uit9Yz3UFnzi3onwQcIN3O8FUqPqtEmoz3VF5a8mA9o7RK59nJ169ka8pqZbx15TFxC7SxoAjlnrJutqeOAAEOMbTEntVc8d02+6qtfDYh5kYgN2Rk8dV0MI6OBDoe+rVacgAIJNgATbLDdArFPBU8wIr1M2XKI1y22R1aqWhVcWM+adzB7ZaBPNUVPEVWOMYR5jKAQWibXItI9pU83JceEg4LERxteMobt0ERsvoj+C2kkmpVJLchkerMxpvVoYyp9Q7vP+Cz5Y/wCpd3n/AAVFNnBLRmipWGaJt0RA2bAqOL4Ky1mVmiq8im6mXkxlaYsR60kC+z2le15Y/wCpd3n/AAUWKxTy0g0iBvvbwT7sc4V8WwPIcyvmzWiYddwJjNJm3t3aKtUxtIgDLWsTJzG4LpiM1jFtvt1F2o3EZ3OZkjM294GQuyT16yBtVOo6s5opjLHNtIN3uYASTeS1w9l1URuxtMDktfOUiS4xJ2wXGIGmsTt1UPGuNMRnkOdLpdcZWmJmLQ46aFXKDK1MAxTADHEEunk5p0B1J0tfboExDa98+Uj5xokm54vK6ADPNZrpJ6wg8zjn9N/eVs19Q6F5vFi7U6Be3jDiC5wa2m0yBZ0kZmbHGIEAKr5RV4ymz5qfm3NuQ3QuBMHc8ylK8zj3dN3eU453Td3lepWbWyNYTTyObTAiTMxkG+Yg7tdsqqzHvYYaWnLABEkHLIBF42nZuOt0FXjndN3eVnjXxOZ8aalXzw7VOopmJiW6TrF1CeFKhblOU8nLcGTaJN7m+v8AgFBV453Td3lOOd03d5UlLFFj87GgdVyLR1zqAe/YYUmI4Re9pa7LBM6X7J3IK/HO6bu8rZtSodHPMRNztsPFWncL1IgBoEAaGRAjWf8AmxVqOJLS4wCXRJMzZwfsI1LQg1NZ/Sf3lY45/Td3lWn8KVCC2GwQRppOsXsqZdeYAvMDQdSCQvqTlmpO6XT3LDarzYOeewlWxwtUBJ5NzMXiZJkX3n+7RRYXHuY3KAwiSbi9wBEgzFgYQRGpUGrnj2ncD8CO9bN40xHGmdOded2/Q9yzUxz3NyE2gDb6oaAbncxvjvUlLhN7QQA24ZNjfiwA066wIsghzVJiak7pdPcsOq1AYLngjUEkHuW5xZ2tYbAGxuAc2UiYiY03KKtVzGSACSSYm89pKDPHv6b/AHinHv6b/eKjRBJx7+m/3inHv6b/AHio0QSce/pv94rHHv6b/eK0WEH6x/QXgqthqBrvy5qjc5zl8spgSBEW6R9g2L3+C+F84L31cPkcQ6kWF8lhaDLw8CDM+xfkVD+ktZhBYGNjomq3vipf2r6zA/xI/q9QVGEVmt+ai7XE2ExERM9g1JXicjibcpnKYuZ/Pbv17sIiI+KfK/0yexuMrihUJZmmxMBxAL2jqDpXQvADAMNQ66NI/wDg1cv1XEySSSZJJ1JNySuouAvo1D8Gl+hq9nDHrjGN3Thym5mXqYH0bPuN+AU6gwPo2fcb8Ap1pBERAUGO9G7sU6gx3o3diDmGtTol7ia7wc12ztl0wQIaAY13+1VnNZYcaYveZ1qEH/xDXRtLjuV6rVOdw8mzGbHMNOVfLECQdu6bkyqZfp8wTrax/tXE6A6yGTAPIEHUKo1e2iBPGuccpteMxNhNpi5nbuUuNgMltdzgXuAGaYEO1Gt5105R9uMz4OXDFvIcC4iDE8p05QJ2R7ABMLHCFQZT8w5ruMOYuEieVyQ8RcWtpbquGsU9M5uQTyrAcWMxnaQ6RpfKBtQ0KBiK7hyRJIJAMOkAATEhvfqpQ5/1JAls3bLiKQAboNReALZo1hKtWzc+DtkbES2Ww6DIG2Zn+VBSxeUFoY8kRv0ILgOy0GNkqsvVe90XwzollrdKrAjJIBkiP5BMzB2DzHKwjnHkRydW5YgkN1Jg23xsgleSi9GoXZXRhi1uQgnLccsEuzFu+BAiLxGyPDO5P0fPY8qDpNjobCHidesZVBRWVaxVJ7nkik8aCILrho2gDZeItKho0HOjK0mTA3Ta0m20d43oI0WFlAREQEREBERAREQEREBERAREQEREGHaLqPgL6NQ/BpfoauXHaLqPgL6NQ/Bpfoag9TA+jZ9xvwCnUGB9Gz7jfgFOgIiICgx3o3dinUGO9G7sQc0OpVJcG1wGl0luUA3c+AGm7rzfbO1VDTqSPnADJMkAX414B6odmdOzP1rfEOw+Z2Zj5zHQckmXBxJkHd3FVM1C3Oi+mvPO868XkjsKqLFWk7Lyq7YyHkgXgGzMoFr7NkQt+Em1QzlPEZ3AGMpPPmSLXvbbbWLVnuoAclj5ykAnTNOo6gFnGcTk5BfJe7k3GUX2G3Rm8/3BLxRkTU5UtyjLEfNAhxEQMoyjqyncpm06wy5cQ0nK3aLcl/JzG1hPvaKnnogxlMSJJBFuLAIA3l2Yj2KTNho9HVBygGb8rXNrad27RBI6k+3zonkxyRBl1XlTGk5r7eNG9b0qVSOTWYBNPUQWuy2GnJtb2RvVDDcUC4ua835A6jIh0bdL9SxR4vMQWvILwGga5ZM22uiLdqCetRdypqtJFPmhs8kPHJ0hsG8bMvVZhGVCwZazQOUQCdCC2TpaCGOnZqNCoMU2nYU21JHOkajYY2KaoaHLIY++fKSLDlEtsDsblHtKCwKVXNaqBaAS0CBlaYgC2zk/yk7FX4NY85ctSBxjbQCQ6LPynYBN/wCXsVEUzuPcsZTpBRVutgC1geXMu0Oyze5A2doW9Hg7M0OzxLWkAtMnM57YF780duZukqiGnYEy9XWoNq1PK5zdxI7jErVIQA7utARYlJQZRYKyGmCYMDU7p0lARYlZI2oCLBWXAjUEWm+46FARFl7SNQRtvZBhEhEBEKxKA7RdR8BfRqH4NL9DVy4/T2LqTgL6NQ/Bpfoag9PA+jZ9xvwCnUGB9Gz7jfgFOgIiICgx3o3dinUGO9G7sQczB2IFRzW5XAuFi4EBrnODAby273FefjTVeWF4aMxOSCMtyJIuYFxdWn8W5zwa1VhzEXMMkOeTp6o5MdZKo44AGBVdUib7Ndkk66qo2r06gaxpaIDiGkEGSXERINhIdGm1TYyrVAJcxoDiDrpLHMbbNIGUOid3aq1Z0sYc7i6XSC6YvqN07Z2qxjIIg1nOykxLg4HkF0jT1rSdhFtgKiqcIOOwag6utlYWAa7j4LDscS3IWtjkj1rhpJg33k+C2q4amNKm0DnNPqEujSYcInrWHYenlkP5XJsXNsTOaY2AQZ69NYCShws9jQ0BsZQ28mzS47/5j4KvUxbi8VLZg4utOpcX77XcdFZw+FoloLquU5WmJGpLgRpawaerNdV3U2CoBmJZmMmwOXOQDt9UA6bUE3nR2fPlZMR60c/jNJ6XxWanC1Q9EHLlkC8S0k328nxOiyMJRzwaoyxqHDXPG0dC+iVMPhwJFRx5M2y68mGxEzd2sC2qIxiOF6j5nLeZidrS3fazio3cIPLw+GyJ2by4kEm8ct1piLbFPXw2HEltVzheLgEw0kA8npACetQnD0s4HGS0zJBE+tBkiIgNJGozRchFYw/CD2AgBlwRzRaYmwsdBrOinbw1VEGGm4JmTJDcpkTBkbNNogqHC4ekQS+qBAOkjdAu2eloDoFO3CYcx88QDGpFgWzJAHS5JaNNZKCHGcJvqCHBsAECARAJaY105A7z1RFRxhbHJaYa5t50cSbid5KmxuGotHzdXMYM6ags00tynb+aVFQoMIEvAlribizgTAjW4jvQMXjnVG5XBus2FyYi52//ADcp38LvzZgGgS4xf1o1MyYi3aRpZQYugxrZZVD7xEQdJk37O/qUz8FSDsvH7XAnKIGWNuaLz4b0Go4UftDTYD1tga0bbGGiDskxElR1Mc5zcpa3mtbN5hsdfV8d5UvktI6Vos3WLnK0kaiLlwvplvqFo/D0wwkVAXQ0xYXMSI27fd6wgx5e7JkhsRG3dl3+3tvqUpY5zWZABEOE3nla7bbE8np5M3G8qObHVOs2vyfHQoyhTLA41IdDrWMxzRFi2b6ygkq8K1HTzRJcSQLy45jc36uy2xYPCbyCC1lzJMEHm5bEG1tyzWwtIZiK0gF0AAFxAMDaBcX8LQj8LSgltYWMAHnGGyTuAm2v+oRnHu4wVIZIGWI5MQRBG6CVuzhR4BADZLQ0uMl1pOaZ1kkytPJ6fGBvGgtI58WBgxI11jv6lL5LSIzcaGjIHZSQ5xN+TaBMAINqXDNRpkBmzUE6Oe+LnSXut2blVr4nM4PyjNMnaCZkSDsiArAwtGDNW8Wgtuczx7AQGHqzzcAqtWoAOjMMpcQHTPJDiMxA6hKCwzhV42NNnATmMZiSdT17epSnhl2WMjc0yTqDYjQ7YtO6RtUTcJSP9sGkBxMxqCQ0CNZEd6kPB1PLm8oETAtuBJETY27PBEV6nCDi8VIbIEAXiL9fWV0zwD9Gofg0v0NXM1XD084YKoylt37Jv3DTeb7dF0zwD9Gofg0v0NUV6eB9Gz7jfgFOoMD6Nn3G/AKdAREQFBjvRu7FOoMd6N3Yg5jqv+ddOGzHMIsIOVxdmiL5mjb16qjVPMy0YyyTtzQ6OUNgkEabSF6uIp1wSG1BlJBIyiwc5xAiDOp7SqvFVdcwEBzuZeW1KhEC/rBxm3PA2iaivWbmiMORBc4zYEAkkaACJA9g3rHCGXKA2i5kGHE7xmls7SbHqj2q1Vw1chw4xuVrXgiIhrHFsQBaSLDdCjz1arAJYBLnSAQdYM5eT63sFza6DZ1WWn+rAEEQd0MBa2Dc6Zo69FTrUKjoPFOADG+rrPrWF5M+y2xXOIqZgDUYSHQ0NbIllOJgRoGgDs75KlPEgcqoyAwzInK2LtPJ2gaDWOpB5FKi51mtJ7AsNpOMw1xjWAbdu5epRwtUX4wfOlkwMxIqFwzaW8OcFFxFUA1M4BLg8i8lwlwtEbT1TI1EJSqDqbhEtInSQb9m9b+S1L8h/JmbG2Uw6/UVJialV3Pkhs7AAIMGwG8wsPx1QzLheZENgyS42je4n2qDSlhXuEtYSJi2/d/zeN61NB2XNlOW1+3TvUmHxlRnMcRqdm2N/YO5R1KxMg6EgxG4QO4WQaIiICIiAiIgIiICIiAiIgIiICIiAsLKIMO0XUnAH0ah+DS/Q1ctu0XUnAH0ah+DS/Q1B6eB9Gz7jfgFOoMD6Nn3G/AKdAREQFBjvRu7FOoMd6N3Yg5OxscZU++/9RUMBevjMaWvcSxpk8mZIAY5zbDZMGRtN1Wp8JOGrWOsNWjYZM2vO3sBtCCmx5EwSJEGDEjcY2LVWcTjC/LIHJ01i5k23kkzvlTecjfkMudt9s/6dgaNiCi5m8eHcsveTdxJtFzNt116GH4Uh0vYDebQIIblECI/+BaDhIy0imwAGSBtNzc62Jt3XQUIRX/ORuS0GzBEmBksMo2W7jdQ4vFl5BLWiJs0QLxbstPtKCskqxTxMF5jngggGIkh3hCkxuPdUABAsZnb7eveeoaIKhWF6NbhUkk5QCS+SLGHNLYkXtJPduUOJxucEZGi4NrRAIgRsvtmAgqoiICIiAiIgIiICIiAiIgIiICIiAiIgw7RdScAfRqH4NL9DVy27RdScA/RqH4NL9DUHp4H0bPuN+AU6gwPo2fcb8Ap0BERAUGO9G7sU6gx3o3diDlyvhqZqHNWyjNcWJE1HhwF7QAD/wB2xQOwlMNBNcSdgaCR28r4T7VsXMFSrnY53zh0tAzmb7JH/N+73si1B2XL0dBxszmnaJZPxVEdTB07ltZsS6AYzQHAAm41uewWBUb6DA544wODWyHD1jaw13nuVltSkG8ug7mugwW5uWeu0C03iFqajJOXDmMrpMEkGOdEwANereg1dgqY/t2nXmxrkLhq6OcA32rPklKfTfpPqOM6j1gBHWosM6nk5VNznZjDtQBlsItN7wpW1KQguougwdvN0te9w6+3dZBq7B0xH9YaZA0bMSCSDLhpEdpW/kNKYOIabjQCAC4AkydgM+z2qAlmZh4t0AAOG+5BI6/79mxTsrUtXUnG0QLAfOOdrMmxDZ/l7girYemJipNnERHUGt6zMzGwSqitUq1MPcXU5B0buMgkSeboRPWt8diabmgMpBpkSYAmAQdN9jGgi2qCkiIoCIiAiIgIiICIiAiIgIiICIiAiIgIiIMO0XUnAP0ah+DS/Q1ctu0XUnAP0ah+DS/Q1B6eB9Gz7jfgFOoMD6Nn3G/AKdAREQFBjvRu7FOoMd6N3Yg5eocbxlXii2eMuDFznOWAba/HrUlUV5u5mbLu1+eiJAiz4Mmwler/AEbOGnEcezDOPGujjck2zRlzEbY/0XunyC/zXBlgI9FcnUa2/wCdq1EJMvj6HlGXkOZdrthGX5w6ZhaXTr7Yso67a88qozmO5PKu3L0Q3dvuvtiMBfkcHEGJ9FDhcmOVOoYbpRHBxY1xZwcHTyhFPTMZsTa0Xn2K9Ut8NwW+vkim5oaXmxjnQDunSO5b1RXqDiy5sHKbiBdoqm4Gl9upFty+0czAbKfBZ5IP9kOUTca7B3+CkxA4OzQynwcRAMkUtZOlxMWt16hOpb4TCVKz8rQ5gDHU2aAxctabc7U37Vu44gUw4uaGgCBoeTyhaNYaDO6Lr7U0sBEhvBgMPgAUjB9S5dfb3o5nB9wGcG7g48Tex5RE9KLdaUW+BbgX1GmrmYJD3nUc25AAHwVTEUSx7mHVri07rGJE7Fd/pBk8oqcVkDJGUMjKOSJy5SREzoV56w0IiICIiAiIgIiICIiAiIgIiICIiAiIgIiIMO0XUnAP0ah+DS/Q1ctu0XUnAH0ah+DS/Q1B6eB9Gz7jfgFOoMD6Nn3G/AKdAREQFBjvRu7FOoMd6N3Yg5cxWPaHvHE07Og2EnK515i06nrHsXn4irmc50RJJjtXp1+D2F7jx7RyiSDGaSXWAm8EePsVU4IfWDbcxHPcyddAAHHXnC21UU1hXnYNgEms08kmBEzMBupvv+O1ZxnB2RufOCC4tHWBN5Fp5OnioKKwr/kbJAz3JG6wLA4uMToTBv6p1XrjgSj5vq4gOz1GvYAQTDc2SWkTBIzG/WrRb5pERQEREBERAREQEREBERAREQEREBERAREQEREBERBh2i6k4A+jUPwaX6Grlt2i6d/o1WJw1GYtTpj/ANbUF3C8JNDGNIMhrRodYjYFI3hZh0Du53ZuWUQPOjbWN+3r7tFJTxocJDT/AMuiIN/Kf5T3qPEVczS2NetEQfkdf+Dz3Oc7y1t3E+iO0zHPWnyNv+3N/KP+dEQPkaf9ub+V+9Pkaf8Abm/lfvRED5Gn/bm/lfvWR/Bypp5eI/CP+dEQY+Rt/wBub+V+9Pkbf9ub+V+9EQZ+Rp/25v5X70+Rp/25v5X70RA+Rp/25v5P70+Rp/25v5P70RA+Rp/25v5P70+Rp/25v5P70RA+Rp/25v5P70+Rp/25v5P70RA+Rp/25v5P70+Rp/25v5P70RA+Rp/25v5P70+Rp325v5P+4iIHyNO+3N/J/enyNO+3N/J/3ERBC7+EkOynH3kD0Dtulw+Fq3+E8/8AX7v+ndtE9O2iIg3H8IjAPlwgmPQHX31h38JIv5dtI9A71dbZ0RBr8k//AO/f/YO2R/P1rL/4Sw0OOOsdIw7ie4PkIiCZv8HHGD5cL39D/uLPyNO+3D8n/cREELv4Rn7d/wCh2776/VuC6QpUmU5nKxrZ0nK0NmNmiIg//9k=">
+        <br />
+        <br />
+            <li><strong>Make the necessary changes to the port configuration.</strong></li>
+        <ul>
+            <li>Run <mark>conf t</mark> to to enter global configuration mode.</li>
+            <li>Run <mark>int gix/x/x</mark> to access the necessary port.</li>
+            <li>If you need to update the port to use access mode run <mark>sw mode access.</mark></li> 
+            <li>If you need to update the access vlan run <mark>sw access vlan x.</li>
+            <li>If you need to update the voice vlan run <mark>sw voice vlan 100.</mark></li>
+            <li>Once done run end followed by wr mem to save the in the config. You can then run <mark>sh run int gix/x/x</mark> to make sure that everything is now correct.</li>
+        </ul>
+        <br />
+        <li><strong>Physically reset the phone and confirm it gets the correct address.</strong> You can then update the ip phone sheet that I shared out.</li>
+         </ol>
+         <h3>Additional</h3>
+         <ul>
+             <li>If there is a port available labeled V on the drop, try to use that port.</li>
+             <li>If you see a phone (other than the 2 in the NLDA) that is still using a power block, unplug it and throw it away.</li>
+             <li>If any phone ports have “switchport trunk allowed Vlan xxx” or just any other unnecessary configuration like that it would probably be best to remove that.</li>
+         </ul>
+
+</body>
+
+</html>
